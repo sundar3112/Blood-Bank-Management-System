@@ -1,0 +1,814 @@
+#include<iostream>
+#include<conio.h>
+#include<string.h>
+#include<math.h>
+#include<stdlib.h>
+#include<stdio.h>
+#include<ctype.h>
+#include<time.h>
+#include<fstream>
+
+using namespace std;
+
+char validbg[8][4]={"AB+","AB-","A+","B+","A-","B-","O+","O-"};
+int bl[8];
+
+void cover()
+{
+ 	time_t t = time(0);   
+	 // get time now
+ 	struct tm * now = localtime( & t );
+ 	cout<<"*******************************************************************************\n";
+ 	cout<<"*                                                                             *\n";
+ 	cout<<"*                         ";
+	cout<<"Blood Bank Management System                        *\n";
+ 	cout<<"*                                                                             *\n";
+ 	cout<<"*******************************************************************************\n";  
+ 	cout<<"*                                 ";
+	cout<<(now->tm_mday);
+	//to print date
+	cout<< "-";
+	cout<< (now->tm_mon + 1); 
+	//to print month
+	cout<< "-";
+	cout<<(now->tm_year + 1900);
+	//to print year
+	cout<<"                                   *\n";
+ 	cout<<"*******************************************************************************\n";   
+}
+
+
+class Donor
+{
+	char name[80]="  ";
+    int age=0;
+    char address1[80]=" ";
+    char bg[4]=" ";
+    char med[80]=" ";
+	public:
+	char ph[15]=" ";
+	int doninfo()
+	{
+     donstart:
+           bool donbgchk=false;
+           cin.ignore();
+           system("cls");
+           cover();
+           cout<<"Enter Name: ";
+           cin.getline(name,80);
+           cout<<"Enter Age: ";
+           cin>>age;
+           
+           char donch;
+           if(age<18)
+           {
+                           cout<<"Donor too young or incorrect age entered\n";
+                           cin.ignore();
+                           cout<<"If incorrect Entry press i else press any button: ";
+                           cin>>donch;
+                           switch(donch)
+                           {
+                                        case 'i':
+                                        case 'I':
+                                             goto donstart;
+                                             break;
+                                        default:
+                                        		system("pause");
+                                                system("cls"); 
+												return 1;                                      
+                           }
+           }
+           else if(age>60)
+           {
+                cout<<"Donor too old or incorrect age entered\n";
+                cin.ignore();
+                cout<<"If incorrect Entry press i else press any button: ";
+                cin>>donch;
+                 switch(donch)
+                 {
+                                        case 'i':
+                                        case 'I':
+                                             goto donstart;
+                                             break;
+                                        default:
+                                        		system("pause");
+                                                system("cls");
+                                                return 1;
+                 }
+           }
+           cin.ignore();
+           cout<<"Enter Phone Number: ";
+           cin.getline(ph,15);
+           int j=strlen(ph);
+           if(j!=10)
+           {
+                    cout<<"Invalid Phone Number Entered!!!\n";
+                    cin.ignore();
+                    system("pause");
+                    goto donstart;
+           }
+           
+           cout<<"Enter Address: ";
+           cin.getline(address1,80);
+           cout<<"Enter Blood Group: ";
+           cin.getline(bg,4);
+           int k=strlen(bg);
+           for(int i=0;i<k;i++)
+           bg[i]=toupper(bg[i]);
+           
+           for(int i=0;i<8;i++)
+           {
+                           if(strcmp(bg,validbg[i])==0)
+                           {
+                                                            donbgchk=true;
+                                                            bl[i]++;
+                                                            break;
+                           }                         
+           }
+           if(donbgchk==false)
+           {
+                           cout<<"Invalid Blood Group Entered!!!\n";
+                           cin.ignore();
+                           system("pause");
+                           goto donstart;
+           } 
+                           
+           cout<<"Enter (if) any medical problems: ";
+           cin.getline(med,80);
+           system("pause");
+           name[0]=toupper(name[0]);
+           address1[0]=toupper(address1[0]); 
+           med[0]=toupper(med[0]);
+        ofstream stats("bloodstats.txt",ios::out);
+        for(int i=0;i<8;i++)
+    	{
+            stats<<bl[i];
+            stats<<"\n";
+    	}
+    	return 0;
+	}
+	
+	void donprint()
+	{
+	     system("cls");
+	     cover();
+	     cout<<"\t\t\t\t   "<<"RECEIPT\n";
+	     cout<<"\t\t\t   Name:           "<<name;
+		 cout<<endl;
+	     cout<<"\t\t\t   Age:            "<<age;
+		 cout<<endl;
+	     cout<<"\t\t\t   Phone:          "<<ph;
+		 cout<<endl;
+	     cout<<"\t\t\t   Address:        "<<address1;
+		 cout<<endl;
+	     cout<<"\t\t\t   Blood Group:    "<<bg;
+		 cout<<endl;
+	     cout<<"\t\t\t   Medical Issues: "<<med;
+		 cout<<endl;
+	}
+	
+}inpd,tempd;
+
+class recipient
+{
+		char name[80]=" ";
+	   	int age=0;
+	   	char address1[80]=" ";
+	   	char bg[4]=" ";
+	   	int pint=0;
+	   	bool blpint;
+	   	int sup=0;
+	   	char med[80]=" ";
+	   	char hospital[80]=" ";
+	   	char doc[30]=" ";
+	public:
+		char ph[15]=" ";
+		
+	void recinfo()
+	{
+     bool recbgchk=false;
+     recstart:
+           cin.ignore();
+           system("cls");
+           cover();
+           cout<<"Enter Name: ";
+           cin.getline(name,80);
+           cout<<"Enter Age: ";
+           cin>>age;
+           cin.ignore();
+           age=fabs(age);
+           cout<<"Enter Phone Number: ";
+           cin.getline(ph,15);
+           int j=strlen(ph);
+           if(j!=10)
+           {
+                    cout<<"Invalid Phone Number Entered!!!\n";
+                    cin.ignore();
+                    system("pause");
+                    goto recstart;
+           }
+           
+           cout<<"Enter Address: ";
+           cin.getline(address1,80);
+           cout<<"Enter Blood Group: ";
+           cin.getline(bg,4);
+           int k=strlen(bg);
+           for(int i=0;i<k;i++)
+           bg[i]=toupper(bg[i]);
+           
+           for(int i=0;i<8;i++)
+           {
+                           if(strcmp(bg,validbg[i])==0)
+                           {
+                                                            recbgchk=true;
+                                                            cout<<"Enter number of Pints Required: ";
+                                                            cin>>pint;
+                                                            sup=pint;
+                                                            if(bl[i]<pint)
+                                                            {
+                                                                          blpint=true;
+                                                                          cout<<"\nINSUFFICIENT AMOUNT OF BLOOD AVAILABLE!!\n";
+                                                                          sup-=bl[i];
+                                                                          bl[i]=0;
+                                                            }
+                                                            else
+                                                            {
+                                                                cout<<"\nSufficient blood supplied!\n";
+                                                                bl[i]-=sup;
+                                                            }
+                                                            break;
+                           }                         
+           }
+           if(recbgchk==false)
+           {
+                           cout<<"Invalid Blood Group Entered!!!\n";
+                           cin.ignore();
+                           system("pause");
+                           goto recstart;
+           } 
+           cin.ignore();
+           cout<<"Enter Doctor's Name: ";
+           cin.getline(doc,30);
+           cout<<"Enter Hospitals's Name: ";
+           cin.getline(hospital,80);
+           cout<<"Enter (if) any medical problems: ";
+           cin.getline(med,80);
+           name[0]=toupper(name[0]);
+           address1[0]=toupper(address1[0]);
+           doc[0]=toupper(doc[0]);
+           hospital[0]=toupper(hospital[0]);
+           med[0]=toupper(med[0]);
+        ofstream stats("bloodstats.txt",ios::out);
+        for(int i=0;i<8;i++)
+    	{
+            stats<<bl[i];
+            stats<<"\n";
+    	}
+	}
+	
+	void recprint()
+	{
+     system("cls");
+     cover();
+     cout<<"\t\t                  ";
+	 cout<<"RECEIPT";
+	 cout<<endl;
+     cout<<"\t\t   Name:                     "<<name;
+	 cout<<endl;
+     cout<<"\t\t   Age:                      "<<age;
+	 cout<<endl;
+     cout<<"\t\t   Phone:                    "<<ph;
+	 cout<<endl;
+     cout<<"\t\t   Address:                  "<<address1;
+	 cout<<endl;
+     cout<<"\t\t   Blood Group:              "<<bg;
+	 cout<<endl;
+     if(blpint==true)
+     {
+                     cout<<"\t\t   Number of ordered pints:  "<<pint;
+					 cout<<endl;
+                     cout<<"\t\t   Number of pints supplied: "<<(pint-sup);
+					 cout<<"\n";
+                     cout<<"\t\t   Number of required pints: "<<sup;
+					 cout<<"\n";
+     }
+     else
+     {
+         cout<<"\t\t   Number of ordered pints:  "<<pint;
+		 cout<<"\n";
+     } 
+     cout<<"\t\t   Doctor's Name:            Dr."<<doc;
+	 cout<<endl;
+     cout<<"\t\t   Hospital's Name:          "<<hospital;
+	 cout<<endl;
+     cout<<"\t\t   Medical Issues:           "<<med;
+	 cout<<endl;
+	}				
+}inpr,tempr;
+
+class control
+{
+	public:
+	
+	void controller()
+	{
+		menustart:
+			
+			int startof=0;
+		ofstream fo;
+		ifstream fi;
+	     system("cls");
+	     cover();
+	     cout<<"1. Donor Input";
+	     cout<<endl;
+	     cout<<"2. Recipient Input";
+	     cout<<endl;
+	     cout<<"3. Access amount of blood";
+	     cout<<endl;
+	     cout<<"4. Access Donor/Recipient information";
+	     cout<<endl;
+	     cout<<"5. Change Password";
+	     cout<<endl;
+	     cout<<"6. Instructions Page";
+	     cout<<endl;
+	     cout<<"7. About";
+	     cout<<endl;
+	     cout<<"8. Logout";
+		 cout<<endl;
+	     cout<<"9. Exit";
+		 cout<<endl;
+	     cout<<"Enter choice:";
+		 cout<<endl;
+	     char ch=0;
+	     cin>>ch;
+	     switch(ch)
+	     {
+	               case '1':
+	               	startof=inpd.doninfo();
+	               	
+	               	if(startof==1)
+	               	{
+	               		goto menustart;
+					}
+					
+	               	fo.open("donor.dat",ios::out|ios::binary|ios::ate|ios::app);
+	               	fo.seekp(0,ios::end);
+	               	fo.write((char*)&inpd,sizeof(inpd));
+	               	inpd.donprint();
+	               	getch();
+	               	fo.close();
+	               break;
+	               
+	               case '2':
+	               	inpr.recinfo();
+	               	fo.open("recipient.dat",ios::out|ios::binary|ios::ate|ios::app);
+	               	fo.seekp(0,ios::end);
+	               	fo.write((char*)&inpr,sizeof(inpr));
+	               	inpr.recprint();
+	               	getch();
+	               	fo.close();
+	               break;
+	               
+	               case '3':
+				   	bloodstats();
+	               break;
+	               
+	               case '4':
+				   	search();
+	               break;
+	               
+	               case '5':
+				   	changepass();
+	               break;
+	               
+	               case '6':
+	               	instructions();
+	               break;
+	               
+	               case '7':
+	               	about();
+	               break;
+	               
+	               case '8':
+	               	login();
+	               break;
+	               
+	               case '9':
+				   	exit(0);
+	               break;
+	               
+	               default:cout<<"Invalid Choice!!\n";
+	               getch();
+	               break;
+	               
+	     }
+	     ch=0;
+	    goto menustart;
+	}
+	
+	void login()
+	{
+     	system("cls");
+     	cover();
+     	char username[20];
+     	int j=3;
+     	bool flag=false;
+     	string pass=" ";
+     	ifstream passes("passcode.txt",ios::in);
+     	passes>>pass;
+     	
+     	//Decrypting
+     	char key = 'K'; 
+	    string output = pass;
+	    
+	    for (int i = 0; i < pass.size(); i++)
+	        output[i] = pass[i] ^ key;
+	    pass=output;
+     	passes.close();
+     	
+     	do{
+     		string password="";
+     		cout<<"Enter Username: ";
+     		cin>>username;
+     		char pa;
+     		cout << "Enter password: ";
+     		pa = _getch();
+     		
+     		while(pa != 13)
+     		{
+              	password.push_back(pa);
+              	cout << "*";
+              	pa = _getch();
+     		}
+     		
+     		char user[3][20]={"Vaishak", "Shashankh" ,"Sundar"};
+     		
+     		for(int i=0;i<3;i++)     		
+     		{
+             	if(strcmp(username,user[i])==0)
+             	{
+                    if(pass==password)
+                    {
+                        cout<<"\nYou have successfully LOGGED IN\n";
+                        j=0;
+                        flag=true;
+                        system("pause");
+                        break;
+                    }
+             	}
+     		}
+     		
+     		if(flag==false)
+     		{
+                    j--;
+                    cout<<"\nAttempts Remaining: "<<j<<"\n";
+                    if(j==0)
+                    exit(0);
+     		}
+     		
+     	}while(j!=0);
+	}
+	
+	void bloodstats()
+	{
+		system("cls");
+		cover();
+    	cout<<"Number Of pints of Blood Available \n";
+    	ifstream stats("bloodstats.txt",ios::in);
+    	
+    	for(int i=0;i<8;i++)
+    	{
+            cout.write(validbg[i],3);
+            int stat;
+            stats>>stat;
+            cout<<": "<<stat<<endl;
+    	}
+    	
+    	getch();
+	}
+	
+	void search()
+	{
+		searchstart:
+		system("cls");
+		cover();
+		ifstream search;
+		char ch;
+		char chkph[15]=" ";
+		int chk=0;
+		cout<<"Enter \'D\' for donor or \'R\' for Recipient: ";
+		cin>>ch;
+		int i=0;
+		switch(ch)
+		{
+			case 'd':
+				search.open("donor.dat",ios::in|ios::binary);
+				cin.ignore();
+				cout<<"Enter Mobile Number: ";
+				cin.getline(chkph,15);
+				
+				while(search.read((char*)&tempd,sizeof(tempd)))
+				{
+					if(strcmp(tempd.ph,chkph)==0)
+					{
+						tempd.donprint();
+						chk=1;
+						cout<<"\n                                 Donation "<<++i;
+						cout<<"\n\n\n\n";
+						getch();
+					}
+				}
+				cout<<"\n";
+				system("pause");
+			break;
+			
+			case 'D':
+				search.open("donor.dat",ios::in|ios::binary);
+				cin.ignore();
+				cout<<"Enter Mobile Number: ";
+				cin.getline(chkph,15);
+				
+				while(search.read((char*)&tempd,sizeof(tempd)))
+				{
+					if(strcmp(tempd.ph,chkph)==0)
+					{
+						tempd.donprint();
+						chk=1;
+						cout<<"\n                                 Donation "<<++i;
+						cout<<"\n\n\n\n";
+						getch();
+					}
+				}
+				cout<<"\n";
+				system("pause");
+				
+			break;
+			
+			case 'r':
+				search.open("recipient.dat",ios::in|ios::binary);
+				cin.ignore();
+				cout<<"Enter Mobile Number: ";
+				cin.getline(chkph,15);
+				
+				while(search.read((char*)&tempr,sizeof(tempr)))
+				{
+					if(strcmp(tempr.ph,chkph)==0)
+					{
+						tempr.recprint();
+						chk=1;
+						cout<<"\n                                  Receipt "<<++i;
+						cout<<"\n\n\n\n";
+						getch();
+					}
+				}
+				cout<<"\n";
+				system("pause");
+				break;
+				
+			case 'R':
+				search.open("recipient.dat",ios::in|ios::binary);
+				cin.ignore();
+				cout<<"Enter Mobile Number: ";
+				cin.getline(chkph,15);
+				
+				while(search.read((char*)&tempr,sizeof(tempr)))
+				{
+					if(strcmp(tempr.ph,chkph)==0)
+					{
+						tempr.recprint();
+						chk=1;
+						cout<<"\n                                  Receipt "<<++i;
+						cout<<"\n\n\n\n";
+						getch();
+					}
+				}
+				cout<<"\n";
+				system("pause");
+				
+			break;
+			default:
+				goto searchstart;
+				break;
+				
+		}
+		if(chk==0)
+		{
+			cout<<"No Such Record Exists!";
+		}
+		getch();
+	}
+	
+	void changepass()
+	{
+		system("cls");
+		cover();
+		string passcode,chkpass;
+		cin.ignore();
+		cout<<"NOTE: Passwords will be shown and wont be covered by asterisks \"*\" "<<endl;
+		cout<<"      ";
+		cout<<"so that you may see what password you are typing and you may"<<endl;
+		cout<<"      ";
+		cout<<"not type a wrong password by mistake\n\n";
+		cout<<"Enter Current Password: ";
+		getline(cin,passcode);
+		ifstream pass("passcode.txt",ios::in);
+		pass>>chkpass;
+		
+		//Decrypting
+		char key = 'K';
+	    string output = chkpass;
+	    
+	    for (int i = 0; i < chkpass.size(); i++)
+	        output[i] = chkpass[i] ^ key;
+	    chkpass=output;
+		pass.close();
+		cout<<endl;
+		if(chkpass==passcode)
+		{
+			cout<<"Enter New Password: ";
+			getline(cin,passcode);
+			
+			//Encrypting
+			output=passcode;
+			for (int i = 0; i < passcode.size(); i++)
+	        	output[i] = passcode[i] ^ key;
+	        passcode=output;
+			ofstream passof("passcode.txt",ios::out);
+			passof<<passcode;
+			passof.close();
+			cout<<endl<<endl;
+			system("pause");
+		}
+		else
+		{
+			cout<<"Wrong Password!!!";
+			cout<<"\n\n";
+			cout<<"Will be redirected to login again!!!";
+			cout<<"\n\n";
+			system("pause");
+			login();
+		}
+	}
+	
+	void instructions()
+	{
+		instructionsstart:
+		system("cls");
+		cover();
+		char instch;
+		cout<<"*                      ";
+		cout<<"WELCOME TO THE INSTRUCTIONS PAGE";
+		cout<<"                       *";
+		cout<<endl;
+		cout<<"*******************************************************************************";
+		cout<<endl;
+		cout<<"1. Guidlines to be followed while logging in";
+		cout<<endl;
+		cout<<"2. Guidlines to be followed while entering details";
+		cout<<endl;
+		cout<<"3. Guidlines to be followed while changing password";
+		cout<<endl;
+		cout<<"4. Exit instructions";
+		cout<<endl;
+		cout<<"Enter Choice: ";
+		cout<<endl;
+		cin>>instch;
+		
+		switch(instch)
+		{
+			case '1':
+				system("cls");
+				cover();
+				cout<<endl;
+				cout<<"1. Both the username and password are case sensitive.";
+				cout<<endl<<endl;
+				cout<<"2. Three trials are given to enter right username and password";
+				cout<<endl;
+				cout<<"   failure to do so leads the program to exit execution.";
+				cout<<endl<<endl;
+				cout<<"3. While entering password using backspace key is not allowed.";
+				cout<<endl;
+				cout<<"   This is done so as to increase security levels.";
+				cout<<endl<<endl;
+				system("pause");
+				goto instructionsstart;
+			break;
+			
+			case '2':
+				system("cls");
+				cover();
+				cout<<endl;
+				cout<<"1. A donor\'s age has to be between 18 and 60 according to indian standards";
+				cout<<endl<<endl;
+				cout<<"2. Please enter the correct phone number for it is used extensively in ";
+				cout<<endl;
+				cout<<"   many places.";
+				cout<<endl<<endl;
+				cout<<"3. It doesnt matter of names/address/blood group is entered without ";
+				cout<<endl;
+				cout<<"   starting with a uppercase letter.";
+				cout<<endl<<endl;
+				cout<<"4. Do not enter \"Dr.\" before the doctors name for this is automatically";
+				cout<<endl;
+				cout<<"   done by the program.";
+				cout<<endl<<endl;
+				system("pause");
+				goto instructionsstart;
+			break;
+			
+			case '3':
+				system("cls");
+				cover();
+				cout<<endl;
+				cout<<"1. Passwords will be shown and wont be covered by asterisks (*)";
+				cout<<endl;
+				cout<<"   so that you may see what password you are typing and you may";
+				cout<<endl;
+				cout<<"   not type a wrong password by mistake";
+				cout<<endl<<endl;
+				cout<<"2. Please ensure you type the current password correctly. If wrong";
+				cout<<endl;
+				cout<<"   password is enterred, you will be redirected to login again!.";
+				cout<<endl<<endl;
+				cout<<"3. Please check the new password your typing so that you dont forget!.";
+				cout<<endl<<endl;
+				system("pause");
+				
+			break;
+			
+			case '4':
+				controller();
+			break;
+			
+			default:
+				cout<<"Invalide Choice!!!";
+				cout<<endl;
+				system("pause");
+				goto instructionsstart;
+		}
+	}
+	
+	void about()
+	{
+		system("cls");
+		cover();
+		cout<<"*                                   ";
+		cout<<"ABOUT"; 
+		cout<<"                                     *";
+		cout<<endl;
+ 		cout<<"*******************************************************************************";
+ 		cout<<endl;
+ 		cout<<"First of all thanks for using this blood bank management system!.";
+ 		cout<<endl;
+ 		cout<<"This blood bank management system is our CBSE Grade 12 Project.";
+ 		cout<<endl;
+ 		cout<<"This Program implements many concepts we have learnt in Grade 11 & 12 such as: ";
+ 		cout<<endl;
+ 		cout<<"1. Condition and Iteration Statements";
+ 		cout<<endl;
+ 		cout<<"2. Arrays";
+ 		cout<<endl;
+ 		cout<<"3. Functions";
+ 		cout<<endl;
+ 		cout<<"4. XOR Encryption";
+ 		cout<<endl;
+ 		cout<<"5. Classes and Objects";
+ 		cout<<endl;
+ 		cout<<"6. Binary file Handling(including input, output and searching of records.";
+ 		cout<<endl;
+ 		cout<<"7. Text file Handling(including input and output.";
+ 		cout<<endl;
+ 		cout<<"8. Searching techniques.";
+ 		cout<<endl;
+ 		cout<<"This Project has been done by:";
+ 		cout<<endl;
+ 		cout<<"Shashankh. S";
+ 		cout<<endl;
+ 		cout<<"Sundar. K";
+ 		cout<<endl;
+ 		cout<<"Vaishak. P";
+ 		cout<<endl;
+ 		cout<<"*******************************************************************************";
+		
+		getch();
+	}
+	
+};
+
+int main()
+{
+    ifstream stats("bloodstats.txt",ios::in);
+    
+    for(int i=0;i<8;i++)
+    {
+    	stats>>bl[i];
+	}
+	
+	control object;
+	object.login();
+	object.controller();
+	
+	getch();
+	
+    return 0;
+}
